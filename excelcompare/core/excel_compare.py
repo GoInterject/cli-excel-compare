@@ -1,4 +1,4 @@
-from excelcompare.core.controllers.convert_for_comparison import convert_sheets_and_save
+from excelcompare.core.controllers.convert_for_comparison import ExcelConverter
 from excelcompare.core.controllers.informer import Informer
 from pathlib import Path
 import os
@@ -19,8 +19,9 @@ class ExcelComparator:
 
 
     def excel_compare(self, excel_first_file_path, excel_second_file_path):
-        res1 = convert_sheets_and_save(excel_first_file_path)
-        res2 = convert_sheets_and_save(excel_second_file_path)
+        excel_converter = ExcelConverter()
+        res1 = excel_converter.convert_sheets_and_save(excel_first_file_path)
+        res2 = excel_converter.convert_sheets_and_save(excel_second_file_path)
         if not (res1 and res2):
             return False
         excel_first_file_path = Path(excel_first_file_path)
@@ -36,7 +37,6 @@ class ExcelComparator:
         second_excel_sheet_files = os.listdir(excel_sheets_second_dir_path)
         second_excel_sheet_files = [f for f in second_excel_sheet_files if os.path.isfile(os.path.join(excel_sheets_second_dir_path, f))]
 
-        # second_excel_sheet_files.append("sheet3.xml")
         self.check_sheets_count(first_excel_sheet_files, second_excel_sheet_files)
 
         print(f'Running compare Excel files')
