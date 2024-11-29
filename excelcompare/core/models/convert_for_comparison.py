@@ -24,7 +24,7 @@ class ExcelParameters:
     }
 
 
-    ignored_paths_in_excel = {
+    ignored_paths_in_excel: Dict = {
         "[Content_Types].xml",
         "_rels/.rels",
         "xl/workbook.xml",
@@ -38,6 +38,9 @@ class ExcelParameters:
 
 
 
+        "xl/worksheets/sheet",  # Pattern for many files
+        "xl/worksheets/_rels/sheet",  # Pattern for many files
+        "xl/tables/table",  # Pattern for many files
         # "xl/worksheets/sheet1.xml",
         # "xl/worksheets/sheet2.xml",
         # "xl/worksheets/_rels/sheet1.xml.rels",

@@ -1,13 +1,19 @@
 from excelcompare.core.utils.pretty_print import XMLPrettyPrint
 from excelcompare.core.models.convert_for_comparison import ExcelParameters
+from excelcompare.core.controllers.informer import Informer
 import os
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import zipfile
+import re
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 class ExcelConverter:
+
+    def __init__(self):
+        self._c_informer = Informer()
+
     def get_xml_tree_from_zip_file(self, zip_ref: zipfile.ZipFile, file_path: str):
         # Read the XML file
         with zip_ref.open(file_path, 'r') as fp: # , encoding='utf-8'
@@ -85,6 +91,30 @@ class ExcelConverter:
         with open(res_sheetxml_file_path, 'w', encoding='utf-8') as file:
             file.write(pretty_xml)
 
+    def search_path(self, pattern_text: str, string: str):
+        pattern_text = pattern_text.replace("\\", r"\\")
+        pattern_text = pattern_text.replace("[", r"\[")
+        pattern_text = pattern_text.replace("]", r"\]")
+        return re.search("^" + pattern_text, string)
+
+    def is_exclude(self, exclude_lst, path: str):
+        for exclude_name in exclude_lst:
+            if self.search_path(exclude_name, path):
+                return True
+        return False
+
+    def ignore_check(self, excel_paths_usage_dict: Dict, xml_file_path: str):
+        if self.is_exclude(ExcelParameters.ignored_paths_in_excel, xml_file_path):
+            excel_paths_usage_dict[xml_file_path]["usage"] = True
+
+    def check_existion_missed_files(self, excel_paths_usage_dict: Dict):
+        msg = ""
+        for file_path in excel_paths_usage_dict.keys():
+            if not ("usage" in excel_paths_usage_dict[file_path] and excel_paths_usage_dict[file_path]["usage"]):
+                msg += f'"{file_path}",\n'
+        if msg:
+            msg = "These files were missed by the converter: {\n" + msg + "}"
+            self._c_informer.print_info(self._c_informer.info_level_error, msg)
 
 
     def convert_sheets_and_save(self, zip_file_path):
@@ -96,15 +126,21 @@ class ExcelConverter:
         with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             # Get the list of file names
             file_list = zip_ref.namelist()
-            
+            excel_paths_usage: Dict = {}
+
+            usage_dict: Dict = {"usage": False}
+            for key in file_list:
+                excel_paths_usage[key] = usage_dict.copy()
+
             for file_path in file_list:
+                self.ignore_check(excel_paths_usage, file_path)
                 if (file_path.startswith(ExcelParameters.worksheets_folder_path)
                     and not file_path.endswith('/')
                     and file_path.endswith('.xml')
                     ):
-                    # print(file_name)
                     res_sheetxml_file_path = workbook_folder.joinpath(Path(file_path).name)
                     self.save_sheet_for_compare_view(zip_ref, file_path, res_sheetxml_file_path, file_list)
+        self.check_existion_missed_files(excel_paths_usage)
         return True
         # try:
         # except Exception as e:
