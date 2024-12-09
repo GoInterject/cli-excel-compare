@@ -1,7 +1,7 @@
 
 For initializing project use this:
 ```bash
-conda create -n excelcompare python=3.10
+conda create -n excelcompare python=3.12
 conda activate excelcompare
 pip install poetry
 poetry install
