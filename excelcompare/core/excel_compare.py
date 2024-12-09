@@ -19,9 +19,8 @@ class ExcelComparator:
 
 
     def excel_compare(self, excel_first_file_path, excel_second_file_path):
-        excel_converter = ExcelConverter()
-        res1 = excel_converter.convert_sheets_and_save(excel_first_file_path)
-        res2 = excel_converter.convert_sheets_and_save(excel_second_file_path)
+        res1 = ExcelConverter().convert_sheets_and_save(excel_first_file_path)
+        res2 = ExcelConverter().convert_sheets_and_save(excel_second_file_path)
         if not (res1 and res2):
             return False
         excel_first_file_path = Path(excel_first_file_path)

@@ -22,5 +22,8 @@ def extract_xml_files(path: str):
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True}
 )
 def list_files_in_zip(path: str):
-    zip_file_path, folder_name = path.split('>', 1)
+    zip_file_path: str = path
+    folder_name: str = ""
+    if '>' in path:
+        zip_file_path, folder_name = path.split('>', 1)
     UnpackZip().list_files_in_zip(zip_file_path, folder_name)

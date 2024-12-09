@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 class ExcelParameters:
 
@@ -24,27 +24,30 @@ class ExcelParameters:
     }
 
 
-    ignored_paths_in_excel: Dict = {
+    ignored_paths_in_excel: List = [
         "[Content_Types].xml",
         "_rels/.rels",
         "xl/workbook.xml",
         "xl/_rels/workbook.xml.rels",
         "xl/theme/", # "theme1.xml"
-        "xl/styles.xml",
-        "xl/sharedStrings.xml",
+        # "xl/styles.xml",
+        # "xl/sharedStrings.xml",
         "docProps/core.xml",
         "docProps/app.xml",
         "docProps/custom.xml",
 
 
 
-        "xl/worksheets/sheet",  # Pattern for many files
-        "xl/worksheets/_rels/sheet",  # Pattern for many files
-        "xl/tables/table",  # Pattern for many files
+        # "xl/worksheets/sheet",  # Pattern for many files
+        # "xl/worksheets/_rels/sheet",  # Pattern for many files
+        # "xl/tables/table",  # Pattern for many files
+        "xl/printerSettings",  # Pattern for many files
+        "xl/metadata.xml",
+        "xl/calcChain.xml",
         # "xl/worksheets/sheet1.xml",
         # "xl/worksheets/sheet2.xml",
         # "xl/worksheets/_rels/sheet1.xml.rels",
         # "xl/worksheets/_rels/sheet2.xml.rels",
         # "xl/tables/table1.xml",
         # "xl/tables/table2.xml",
-    }
+    ]
