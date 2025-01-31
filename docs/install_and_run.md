@@ -9,7 +9,7 @@ poetry install
 
 
 
-
+## Comparsion Excel files
 For comparsion files use this commands:
 ```bash
 excelcompare file1.xlsx file2.xlsx
@@ -24,3 +24,20 @@ git diff -- file1.txt file2.txt
 code --diff file1.txt file2.txt
 ```
 
+## Conversion of Excel files to JSON
+
+### Initializing
+```bash
+npm install
+```
+
+
+For convertion Excel file use command:
+```bash
+excelcompare tojson "FolderPaths/ExceFile.xlsx" "OutputFolderPath"
+```
+
+For saving output file in current folder:
+```bash
+excelcompare tojson "FolderPaths/ExceFile.xlsx" "."
+```
